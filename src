@@ -1,4 +1,4 @@
--- UILib Library
+-- UILib Library (CS:GO Style Menu)
 local UILib = {}
 
 -- Функция для создания основного окна GUI
@@ -8,28 +8,41 @@ function UILib.CreateWindow(title)
     ScreenGui.Parent = game:GetService("CoreGui")
 
     local MainFrame = Instance.new("Frame")
-    MainFrame.Size = UDim2.new(0, 500, 0, 600)
-    MainFrame.Position = UDim2.new(0.5, -250, 0.5, -300)
-    MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    MainFrame.Size = UDim2.new(0, 400, 0, 500)
+    MainFrame.Position = UDim2.new(0.5, -200, 0.5, -250)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
     MainFrame.BorderSizePixel = 0
     MainFrame.Parent = ScreenGui
 
-    local Title = Instance.new("TextLabel")
-    Title.Text = title
-    Title.Size = UDim2.new(1, 0, 0, 40)
-    Title.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Title.Font = Enum.Font.SourceSansBold
-    Title.TextSize = 20
-    Title.Parent = MainFrame
+    local MainBorder = Instance.new("UICorner")
+    MainBorder.CornerRadius = UDim.new(0, 4)
+    MainBorder.Parent = MainFrame
 
-    local ContentFrame = Instance.new("ScrollingFrame")
-    ContentFrame.Size = UDim2.new(1, 0, 1, -40)
-    ContentFrame.Position = UDim2.new(0, 0, 0, 40)
-    ContentFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    local TitleBar = Instance.new("Frame")
+    TitleBar.Size = UDim2.new(1, 0, 0, 30)
+    TitleBar.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    TitleBar.BorderSizePixel = 0
+    TitleBar.Parent = MainFrame
+
+    local TitleLabel = Instance.new("TextLabel")
+    TitleLabel.Text = title
+    TitleLabel.Size = UDim2.new(1, 0, 1, 0)
+    TitleLabel.Font = Enum.Font.SourceSansBold
+    TitleLabel.TextSize = 18
+    TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TitleLabel.BackgroundTransparency = 1
+    TitleLabel.Parent = TitleBar
+
+    local ContentFrame = Instance.new("Frame")
+    ContentFrame.Size = UDim2.new(1, 0, 1, -30)
+    ContentFrame.Position = UDim2.new(0, 0, 0, 30)
+    ContentFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     ContentFrame.BorderSizePixel = 0
-    ContentFrame.ScrollBarThickness = 6
     ContentFrame.Parent = MainFrame
+
+    local ContentBorder = Instance.new("UICorner")
+    ContentBorder.CornerRadius = UDim.new(0, 4)
+    ContentBorder.Parent = ContentFrame
 
     return {
         ScreenGui = ScreenGui,
@@ -38,26 +51,63 @@ function UILib.CreateWindow(title)
     }
 end
 
+-- Функция для создания кнопки
+function UILib.CreateButton(window, buttonText, callback)
+    local Button = Instance.new("TextButton")
+    Button.Size = UDim2.new(0, 360, 0, 40)
+    Button.Position = UDim2.new(0.5, 0, 0, 10)
+    Button.AnchorPoint = Vector2.new(0.5, 0)
+    Button.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    Button.BorderSizePixel = 0
+    Button.Text = buttonText
+    Button.Font = Enum.Font.SourceSansBold
+    Button.TextSize = 16
+    Button.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Button.Parent = window.ContentFrame
+
+    local ButtonCorner = Instance.new("UICorner")
+    ButtonCorner.CornerRadius = UDim.new(0, 4)
+    ButtonCorner.Parent = Button
+
+    Button.MouseEnter:Connect(function()
+        Button.BackgroundColor3 = Color3.fromRGB(55, 55, 55)
+    end)
+
+    Button.MouseLeave:Connect(function()
+        Button.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    end)
+
+    Button.MouseButton1Click:Connect(function()
+        callback()
+    end)
+end
+
 -- Функция для создания чекбокса
 function UILib.CreateCheckbox(window, labelText, default, callback)
     local CheckboxFrame = Instance.new("Frame")
-    CheckboxFrame.Size = UDim2.new(1, -20, 0, 30)
-    CheckboxFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    CheckboxFrame.Size = UDim2.new(0, 360, 0, 40)
+    CheckboxFrame.Position = UDim2.new(0.5, 0, 0, 60)
+    CheckboxFrame.AnchorPoint = Vector2.new(0.5, 0)
+    CheckboxFrame.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
     CheckboxFrame.BorderSizePixel = 0
     CheckboxFrame.Parent = window.ContentFrame
+
+    local CheckboxBorder = Instance.new("UICorner")
+    CheckboxBorder.CornerRadius = UDim.new(0, 4)
+    CheckboxBorder.Parent = CheckboxFrame
 
     local Label = Instance.new("TextLabel")
     Label.Text = labelText
     Label.Size = UDim2.new(0.8, 0, 1, 0)
-    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
     Label.Font = Enum.Font.SourceSans
     Label.TextSize = 16
+    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
     Label.BackgroundTransparency = 1
     Label.Parent = CheckboxFrame
 
     local Checkbox = Instance.new("TextButton")
     Checkbox.Size = UDim2.new(0, 20, 0, 20)
-    Checkbox.Position = UDim2.new(0.9, -10, 0.5, -10)
+    Checkbox.Position = UDim2.new(0.9, 0, 0.5, 0)
     Checkbox.AnchorPoint = Vector2.new(0.5, 0.5)
     Checkbox.BackgroundColor3 = default and Color3.fromRGB(0, 200, 0) or Color3.fromRGB(200, 0, 0)
     Checkbox.Text = ""
@@ -67,60 +117,6 @@ function UILib.CreateCheckbox(window, labelText, default, callback)
         default = not default
         Checkbox.BackgroundColor3 = default and Color3.fromRGB(0, 200, 0) or Color3.fromRGB(200, 0, 0)
         callback(default)
-    end)
-end
-
--- Функция для создания слайдера
-function UILib.CreateSlider(window, sliderText, min, max, default, callback)
-    local SliderFrame = Instance.new("Frame")
-    SliderFrame.Size = UDim2.new(1, -20, 0, 50)
-    SliderFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    SliderFrame.BorderSizePixel = 0
-    SliderFrame.Parent = window.ContentFrame
-
-    local Label = Instance.new("TextLabel")
-    Label.Text = sliderText
-    Label.Size = UDim2.new(0.4, 0, 1, 0)
-    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Label.Font = Enum.Font.SourceSans
-    Label.TextSize = 16
-    Label.BackgroundTransparency = 1
-    Label.Parent = SliderFrame
-
-    local SliderBar = Instance.new("Frame")
-    SliderBar.Size = UDim2.new(0.5, 0, 0.2, 0)
-    SliderBar.Position = UDim2.new(0.45, 0, 0.5, 0)
-    SliderBar.AnchorPoint = Vector2.new(0, 0.5)
-    SliderBar.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
-    SliderBar.Parent = SliderFrame
-
-    local SliderButton = Instance.new("TextButton")
-    SliderButton.Size = UDim2.new(0, 15, 0, 20)
-    SliderButton.Position = UDim2.new((default - min) / (max - min), -7.5, 0.5, -10)
-    SliderButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    SliderButton.Text = ""
-    SliderButton.Parent = SliderBar
-
-    local dragging = false
-
-    SliderButton.MouseButton1Down:Connect(function()
-        dragging = true
-    end)
-
-    game:GetService("UserInputService").InputEnded:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            dragging = false
-        end
-    end)
-
-    SliderButton.MouseMoved:Connect(function()
-        if dragging then
-            local mousePos = game.Players.LocalPlayer:GetMouse().X
-            local relativePos = math.clamp((mousePos - SliderBar.AbsolutePosition.X) / SliderBar.AbsoluteSize.X, 0, 1)
-            SliderButton.Position = UDim2.new(relativePos, -7.5, 0.5, -10)
-            local value = math.floor(min + (max - min) * relativePos)
-            callback(value)
-        end
     end)
 end
 
