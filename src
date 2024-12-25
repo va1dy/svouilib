@@ -1,35 +1,32 @@
 -- UILib Library
 local UILib = {}
 
--- Функция для создания основного фрейма GUI
+-- Функция для создания основного окна GUI
 function UILib.CreateWindow(title)
-    -- ScreenGui создается внутри CoreGui
     local ScreenGui = Instance.new("ScreenGui")
-    ScreenGui.Name = "CustomUI"
-    
-    -- Добавляем GUI в CoreGui
+    ScreenGui.Name = "ZenithUI"
     ScreenGui.Parent = game:GetService("CoreGui")
 
     local MainFrame = Instance.new("Frame")
-    MainFrame.Size = UDim2.new(0, 400, 0, 300)
-    MainFrame.Position = UDim2.new(0.5, -200, 0.5, -150)
-    MainFrame.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+    MainFrame.Size = UDim2.new(0, 500, 0, 600)
+    MainFrame.Position = UDim2.new(0.5, -250, 0.5, -300)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
     MainFrame.BorderSizePixel = 0
     MainFrame.Parent = ScreenGui
 
     local Title = Instance.new("TextLabel")
     Title.Text = title
     Title.Size = UDim2.new(1, 0, 0, 50)
-    Title.BackgroundColor3 = Color3.new(0.15, 0.15, 0.15)
-    Title.TextColor3 = Color3.new(1, 1, 1)
+    Title.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    Title.TextColor3 = Color3.fromRGB(255, 255, 255)
     Title.Font = Enum.Font.SourceSansBold
-    Title.TextSize = 24
+    Title.TextSize = 20
     Title.Parent = MainFrame
 
     local ContentFrame = Instance.new("Frame")
     ContentFrame.Size = UDim2.new(1, 0, 1, -50)
     ContentFrame.Position = UDim2.new(0, 0, 0, 50)
-    ContentFrame.BackgroundColor3 = Color3.new(0.12, 0.12, 0.12)
+    ContentFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     ContentFrame.BorderSizePixel = 0
     ContentFrame.Parent = MainFrame
 
@@ -40,48 +37,64 @@ function UILib.CreateWindow(title)
     }
 end
 
--- Функция для создания кнопки
-function UILib.CreateButton(window, buttonText, callback)
-    local Button = Instance.new("TextButton")
-    Button.Size = UDim2.new(0, 150, 0, 50)
-    Button.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
-    Button.Text = buttonText
-    Button.TextColor3 = Color3.new(1, 1, 1)
-    Button.Font = Enum.Font.SourceSansBold
-    Button.TextSize = 18
-    Button.Parent = window.ContentFrame
+-- Функция для создания чекбокса
+function UILib.CreateCheckbox(window, labelText, default, callback)
+    local CheckboxFrame = Instance.new("Frame")
+    CheckboxFrame.Size = UDim2.new(0, 200, 0, 30)
+    CheckboxFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    CheckboxFrame.Parent = window.ContentFrame
 
-    Button.MouseButton1Click:Connect(function()
-        callback()
+    local Label = Instance.new("TextLabel")
+    Label.Text = labelText
+    Label.Size = UDim2.new(0, 150, 1, 0)
+    Label.Position = UDim2.new(0, 10, 0, 0)
+    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Label.Font = Enum.Font.SourceSans
+    Label.TextSize = 16
+    Label.BackgroundTransparency = 1
+    Label.Parent = CheckboxFrame
+
+    local Checkbox = Instance.new("TextButton")
+    Checkbox.Size = UDim2.new(0, 20, 0, 20)
+    Checkbox.Position = UDim2.new(1, -30, 0.5, -10)
+    Checkbox.BackgroundColor3 = default and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
+    Checkbox.Text = ""
+    Checkbox.Parent = CheckboxFrame
+
+    Checkbox.MouseButton1Click:Connect(function()
+        default = not default
+        Checkbox.BackgroundColor3 = default and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
+        callback(default)
     end)
 end
 
 -- Функция для создания слайдера
-function UILib.CreateSlider(window, sliderText, min, max, callback)
+function UILib.CreateSlider(window, sliderText, min, max, default, callback)
     local SliderFrame = Instance.new("Frame")
-    SliderFrame.Size = UDim2.new(0, 250, 0, 50)
-    SliderFrame.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+    SliderFrame.Size = UDim2.new(0, 400, 0, 50)
+    SliderFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
     SliderFrame.Parent = window.ContentFrame
 
-    local SliderLabel = Instance.new("TextLabel")
-    SliderLabel.Text = sliderText
-    SliderLabel.Size = UDim2.new(0, 100, 1, 0)
-    SliderLabel.TextColor3 = Color3.new(1, 1, 1)
-    SliderLabel.Font = Enum.Font.SourceSans
-    SliderLabel.TextSize = 16
-    SliderLabel.BackgroundTransparency = 1
-    SliderLabel.Parent = SliderFrame
+    local Label = Instance.new("TextLabel")
+    Label.Text = sliderText
+    Label.Size = UDim2.new(0, 100, 1, 0)
+    Label.Position = UDim2.new(0, 10, 0, 0)
+    Label.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Label.Font = Enum.Font.SourceSans
+    Label.TextSize = 16
+    Label.BackgroundTransparency = 1
+    Label.Parent = SliderFrame
 
     local SliderBar = Instance.new("Frame")
-    SliderBar.Size = UDim2.new(0, 150, 0, 10)
-    SliderBar.Position = UDim2.new(0, 100, 0.5, -5)
-    SliderBar.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
+    SliderBar.Size = UDim2.new(0, 250, 0, 10)
+    SliderBar.Position = UDim2.new(0, 120, 0.5, -5)
+    SliderBar.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
     SliderBar.Parent = SliderFrame
 
     local SliderButton = Instance.new("TextButton")
     SliderButton.Size = UDim2.new(0, 10, 0, 20)
-    SliderButton.Position = UDim2.new(0, 0, 0.5, -10)
-    SliderButton.BackgroundColor3 = Color3.new(1, 0.5, 0.5)
+    SliderButton.Position = UDim2.new((default - min) / (max - min), -5, 0.5, -10)
+    SliderButton.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
     SliderButton.Text = ""
     SliderButton.Parent = SliderBar
 
