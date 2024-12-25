@@ -10,24 +10,25 @@ function UILib.CreateWindow(title)
     local MainFrame = Instance.new("Frame")
     MainFrame.Size = UDim2.new(0, 500, 0, 600)
     MainFrame.Position = UDim2.new(0.5, -250, 0.5, -300)
-    MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+    MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
     MainFrame.BorderSizePixel = 0
     MainFrame.Parent = ScreenGui
 
     local Title = Instance.new("TextLabel")
     Title.Text = title
-    Title.Size = UDim2.new(1, 0, 0, 50)
-    Title.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    Title.Size = UDim2.new(1, 0, 0, 40)
+    Title.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
     Title.TextColor3 = Color3.fromRGB(255, 255, 255)
     Title.Font = Enum.Font.SourceSansBold
     Title.TextSize = 20
     Title.Parent = MainFrame
 
-    local ContentFrame = Instance.new("Frame")
-    ContentFrame.Size = UDim2.new(1, 0, 1, -50)
-    ContentFrame.Position = UDim2.new(0, 0, 0, 50)
-    ContentFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    local ContentFrame = Instance.new("ScrollingFrame")
+    ContentFrame.Size = UDim2.new(1, 0, 1, -40)
+    ContentFrame.Position = UDim2.new(0, 0, 0, 40)
+    ContentFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
     ContentFrame.BorderSizePixel = 0
+    ContentFrame.ScrollBarThickness = 6
     ContentFrame.Parent = MainFrame
 
     return {
@@ -40,14 +41,14 @@ end
 -- Функция для создания чекбокса
 function UILib.CreateCheckbox(window, labelText, default, callback)
     local CheckboxFrame = Instance.new("Frame")
-    CheckboxFrame.Size = UDim2.new(0, 200, 0, 30)
-    CheckboxFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    CheckboxFrame.Size = UDim2.new(1, -20, 0, 30)
+    CheckboxFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    CheckboxFrame.BorderSizePixel = 0
     CheckboxFrame.Parent = window.ContentFrame
 
     local Label = Instance.new("TextLabel")
     Label.Text = labelText
-    Label.Size = UDim2.new(0, 150, 1, 0)
-    Label.Position = UDim2.new(0, 10, 0, 0)
+    Label.Size = UDim2.new(0.8, 0, 1, 0)
     Label.TextColor3 = Color3.fromRGB(255, 255, 255)
     Label.Font = Enum.Font.SourceSans
     Label.TextSize = 16
@@ -56,14 +57,15 @@ function UILib.CreateCheckbox(window, labelText, default, callback)
 
     local Checkbox = Instance.new("TextButton")
     Checkbox.Size = UDim2.new(0, 20, 0, 20)
-    Checkbox.Position = UDim2.new(1, -30, 0.5, -10)
-    Checkbox.BackgroundColor3 = default and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
+    Checkbox.Position = UDim2.new(0.9, -10, 0.5, -10)
+    Checkbox.AnchorPoint = Vector2.new(0.5, 0.5)
+    Checkbox.BackgroundColor3 = default and Color3.fromRGB(0, 200, 0) or Color3.fromRGB(200, 0, 0)
     Checkbox.Text = ""
     Checkbox.Parent = CheckboxFrame
 
     Checkbox.MouseButton1Click:Connect(function()
         default = not default
-        Checkbox.BackgroundColor3 = default and Color3.fromRGB(0, 255, 0) or Color3.fromRGB(255, 0, 0)
+        Checkbox.BackgroundColor3 = default and Color3.fromRGB(0, 200, 0) or Color3.fromRGB(200, 0, 0)
         callback(default)
     end)
 end
@@ -71,14 +73,14 @@ end
 -- Функция для создания слайдера
 function UILib.CreateSlider(window, sliderText, min, max, default, callback)
     local SliderFrame = Instance.new("Frame")
-    SliderFrame.Size = UDim2.new(0, 400, 0, 50)
-    SliderFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+    SliderFrame.Size = UDim2.new(1, -20, 0, 50)
+    SliderFrame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    SliderFrame.BorderSizePixel = 0
     SliderFrame.Parent = window.ContentFrame
 
     local Label = Instance.new("TextLabel")
     Label.Text = sliderText
-    Label.Size = UDim2.new(0, 100, 1, 0)
-    Label.Position = UDim2.new(0, 10, 0, 0)
+    Label.Size = UDim2.new(0.4, 0, 1, 0)
     Label.TextColor3 = Color3.fromRGB(255, 255, 255)
     Label.Font = Enum.Font.SourceSans
     Label.TextSize = 16
@@ -86,15 +88,16 @@ function UILib.CreateSlider(window, sliderText, min, max, default, callback)
     Label.Parent = SliderFrame
 
     local SliderBar = Instance.new("Frame")
-    SliderBar.Size = UDim2.new(0, 250, 0, 10)
-    SliderBar.Position = UDim2.new(0, 120, 0.5, -5)
-    SliderBar.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    SliderBar.Size = UDim2.new(0.5, 0, 0.2, 0)
+    SliderBar.Position = UDim2.new(0.45, 0, 0.5, 0)
+    SliderBar.AnchorPoint = Vector2.new(0, 0.5)
+    SliderBar.BackgroundColor3 = Color3.fromRGB(70, 70, 70)
     SliderBar.Parent = SliderFrame
 
     local SliderButton = Instance.new("TextButton")
-    SliderButton.Size = UDim2.new(0, 10, 0, 20)
-    SliderButton.Position = UDim2.new((default - min) / (max - min), -5, 0.5, -10)
-    SliderButton.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+    SliderButton.Size = UDim2.new(0, 15, 0, 20)
+    SliderButton.Position = UDim2.new((default - min) / (max - min), -7.5, 0.5, -10)
+    SliderButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     SliderButton.Text = ""
     SliderButton.Parent = SliderBar
 
@@ -114,7 +117,7 @@ function UILib.CreateSlider(window, sliderText, min, max, default, callback)
         if dragging then
             local mousePos = game.Players.LocalPlayer:GetMouse().X
             local relativePos = math.clamp((mousePos - SliderBar.AbsolutePosition.X) / SliderBar.AbsoluteSize.X, 0, 1)
-            SliderButton.Position = UDim2.new(relativePos, -5, 0.5, -10)
+            SliderButton.Position = UDim2.new(relativePos, -7.5, 0.5, -10)
             local value = math.floor(min + (max - min) * relativePos)
             callback(value)
         end
