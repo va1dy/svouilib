@@ -1,0 +1,111 @@
+-- UILib Library
+local UILib = {}
+
+-- Функция для создания основного фрейма GUI
+function UILib.CreateWindow(title)
+    -- ScreenGui создается внутри CoreGui
+    local ScreenGui = Instance.new("ScreenGui")
+    ScreenGui.Name = "CustomUI"
+    
+    -- Добавляем GUI в CoreGui
+    ScreenGui.Parent = game:GetService("CoreGui")
+
+    local MainFrame = Instance.new("Frame")
+    MainFrame.Size = UDim2.new(0, 400, 0, 300)
+    MainFrame.Position = UDim2.new(0.5, -200, 0.5, -150)
+    MainFrame.BackgroundColor3 = Color3.new(0.1, 0.1, 0.1)
+    MainFrame.BorderSizePixel = 0
+    MainFrame.Parent = ScreenGui
+
+    local Title = Instance.new("TextLabel")
+    Title.Text = title
+    Title.Size = UDim2.new(1, 0, 0, 50)
+    Title.BackgroundColor3 = Color3.new(0.15, 0.15, 0.15)
+    Title.TextColor3 = Color3.new(1, 1, 1)
+    Title.Font = Enum.Font.SourceSansBold
+    Title.TextSize = 24
+    Title.Parent = MainFrame
+
+    local ContentFrame = Instance.new("Frame")
+    ContentFrame.Size = UDim2.new(1, 0, 1, -50)
+    ContentFrame.Position = UDim2.new(0, 0, 0, 50)
+    ContentFrame.BackgroundColor3 = Color3.new(0.12, 0.12, 0.12)
+    ContentFrame.BorderSizePixel = 0
+    ContentFrame.Parent = MainFrame
+
+    return {
+        ScreenGui = ScreenGui,
+        MainFrame = MainFrame,
+        ContentFrame = ContentFrame
+    }
+end
+
+-- Функция для создания кнопки
+function UILib.CreateButton(window, buttonText, callback)
+    local Button = Instance.new("TextButton")
+    Button.Size = UDim2.new(0, 150, 0, 50)
+    Button.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+    Button.Text = buttonText
+    Button.TextColor3 = Color3.new(1, 1, 1)
+    Button.Font = Enum.Font.SourceSansBold
+    Button.TextSize = 18
+    Button.Parent = window.ContentFrame
+
+    Button.MouseButton1Click:Connect(function()
+        callback()
+    end)
+end
+
+-- Функция для создания слайдера
+function UILib.CreateSlider(window, sliderText, min, max, callback)
+    local SliderFrame = Instance.new("Frame")
+    SliderFrame.Size = UDim2.new(0, 250, 0, 50)
+    SliderFrame.BackgroundColor3 = Color3.new(0.2, 0.2, 0.2)
+    SliderFrame.Parent = window.ContentFrame
+
+    local SliderLabel = Instance.new("TextLabel")
+    SliderLabel.Text = sliderText
+    SliderLabel.Size = UDim2.new(0, 100, 1, 0)
+    SliderLabel.TextColor3 = Color3.new(1, 1, 1)
+    SliderLabel.Font = Enum.Font.SourceSans
+    SliderLabel.TextSize = 16
+    SliderLabel.BackgroundTransparency = 1
+    SliderLabel.Parent = SliderFrame
+
+    local SliderBar = Instance.new("Frame")
+    SliderBar.Size = UDim2.new(0, 150, 0, 10)
+    SliderBar.Position = UDim2.new(0, 100, 0.5, -5)
+    SliderBar.BackgroundColor3 = Color3.new(0.5, 0.5, 0.5)
+    SliderBar.Parent = SliderFrame
+
+    local SliderButton = Instance.new("TextButton")
+    SliderButton.Size = UDim2.new(0, 10, 0, 20)
+    SliderButton.Position = UDim2.new(0, 0, 0.5, -10)
+    SliderButton.BackgroundColor3 = Color3.new(1, 0.5, 0.5)
+    SliderButton.Text = ""
+    SliderButton.Parent = SliderBar
+
+    local dragging = false
+
+    SliderButton.MouseButton1Down:Connect(function()
+        dragging = true
+    end)
+
+    game:GetService("UserInputService").InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
+            dragging = false
+        end
+    end)
+
+    SliderButton.MouseMoved:Connect(function()
+        if dragging then
+            local mousePos = game.Players.LocalPlayer:GetMouse().X
+            local relativePos = math.clamp((mousePos - SliderBar.AbsolutePosition.X) / SliderBar.AbsoluteSize.X, 0, 1)
+            SliderButton.Position = UDim2.new(relativePos, -5, 0.5, -10)
+            local value = math.floor(min + (max - min) * relativePos)
+            callback(value)
+        end
+    end)
+end
+
+return UILib
